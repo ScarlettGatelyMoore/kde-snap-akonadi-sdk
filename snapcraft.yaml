@@ -87,10 +87,6 @@ parts:
         - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
         - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
         - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-        - *id001
-        - *id002
-        - *id003
-        - *id004
     kmime:
         after:
         - akonadi
