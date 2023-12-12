@@ -1,0 +1,1134 @@
+---
+name: akonadi-sdk
+base: core22
+summary: KDE Akonadi data server for PIM applications Development
+description: KDE Akonadi data server for PIM applications shared dbus provider
+confinement: strict
+grade: stable
+version: 23.08.4
+compression: lzo
+slots: {}
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+  # - build-on: armhf
+  # - build-on: ppc64el
+assumes:
+- snapd2.58.3
+environment:
+    SNAP_DESKTOP_RUNTIME: $SNAP/kf5
+    DK_PLUGIN_PATH: "$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/plugins/digikam"
+    PERL5LIB: "$SNAP/usr/share/perl5"
+    LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/:$SNAP/kf5/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/:$SNAP/usr/lib:/$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/lapack"
+    DICPATH: "$SNAP/usr/share/hunspell"
+package-repositories:
+-   type: apt
+    components:
+    - main
+    suites:
+    - jammy
+    key-id: 444DABCF3667D0283F894EDDE6D4736255751E5D
+    url: http://origin.archive.neon.kde.org/user
+    key-server: keyserver.ubuntu.com
+parts:
+    akonadi:
+        plugin: cmake
+        build-packages:
+        - cmake
+        - kdesignerplugin
+        - kgendesignerplugin
+        - libaccounts-glib-dev
+        - libaccounts-qt5-dev
+        - libboost-dev
+        - libkaccounts-dev
+        - liblzma-dev
+        - libmariadb-dev-compat
+        - libsqlite3-dev
+        - libxml2-dev
+        - libxml2-utils
+        - libxslt1-dev
+        - pkg-config
+        - qtbase5-private-dev
+        - shared-mime-info
+        - xsltproc
+        stage-packages:
+        - libaccounts-qt5-1
+        - libkaccounts2
+        - mariadb-client-core-10.6
+        - mariadb-server-core-10.6
+        - postgresql
+        - libaccounts-qt5-1
+        - libxml2
+        - liblzma5
+        source: https://invent.kde.org/pim/akonadi.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+        - *id001
+        - *id002
+        - *id003
+        - *id004
+    kmime:
+        after:
+        - akonadi
+        plugin: cmake
+        build-packages:
+        - cmake
+        - extra-cmake-modules
+        - libboost-dev
+        source: https://invent.kde.org/pim/kmime.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    akonadi-mime:
+        after:
+        - akonadi
+        - kmime
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libxslt1-dev
+        - pkg-config
+        - shared-mime-info
+        - xsltproc
+        source: https://invent.kde.org/pim/akonadi-mime.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    akonadi-search:
+        after:
+        - akonadi
+        - akonadi-mime
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libkaccounts-dev
+        - libkf5calendarcore-dev
+        - libkf5contacts-dev
+        - libxapian-dev
+        stage-packages:
+        - libxapian30
+        - libkf5calendarcore5
+        source: https://invent.kde.org/pim/akonadi-search.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    grantlee-theme:
+        after:
+        - akonadi
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libboost-dev
+        - libgrantlee5-dev
+        stage-packages:
+        - libgrantlee-templates5
+        - libgrantlee-textdocument5
+        source: https://invent.kde.org/pim/grantleetheme.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    ksmtp:
+        after:
+        - kmime
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libsasl2-dev
+        source: https://invent.kde.org/pim/ksmtp.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    libkgapi:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libkf5calendarcore-dev
+        - libsasl2-dev
+        - libxml2-utils
+        source: https://invent.kde.org/pim/libkgapi.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    kmailtransport:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libsasl2-dev
+        - pkg-config
+        - qt5keychain-dev
+        stage-packages:
+        - libqt5keychain1
+        source: https://invent.kde.org/pim/kmailtransport.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    kpimtextedit:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/kpimtextedit.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    kidentitymanagement:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/kidentitymanagement.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    kcalutils:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/kcalutils.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    kimap:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - akonadi-contact
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/kimap.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    kldap:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - akonadi-contact
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libkf5doctools-dev
+        source: https://invent.kde.org/pim/kldap.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    libkdepim:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - akonadi-contact
+        - kldap
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libkf5doctools-dev
+        source: https://invent.kde.org/pim/libkdepim.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    ktextaddons:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - akonadi-contact
+        - kldap
+        - libkdepim
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libkf5doctools-dev
+        source: https://invent.kde.org/libraries/ktextaddons.git
+        source-branch: '1.5'
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    pimcommon:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - akonadi-contact
+        - kimap
+        - kldap
+        - libkdepim
+        - ktextaddons
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/pimcommon.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    gravatar:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - pimcommon
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/libgravatar.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    libkleo:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - pimcommon
+        - gravatar
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libgpg-error-dev
+        - libgpgmepp-dev
+        - libgpgme-dev
+        - libqgpgme-dev
+        stage-packages:
+        - libgpgmepp6
+        - libgpgme11
+        - libqgpgme15
+        source: https://invent.kde.org/pim/libkleo.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+        prime:
+        - "-usr/lib/*/cmake/*"
+    kmbox:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - pimcommon
+        - gravatar
+        - libkleo
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/kmbox.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    messagelib:
+        after:
+        - akonadi
+        - akonadi-mime
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - akonadi-contact
+        - gravatar
+        - libkleo
+        - kmbox
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libqca-qt5-2-dev
+        stage-packages:
+        - libqca-qt5-2
+        - libqca-qt5-2-plugins
+        source: https://invent.kde.org/pim/messagelib.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    akonadi-contact:
+        after:
+        - akonadi
+        - akonadi-mime
+        - akonadi-search
+        - grantlee-theme
+        - ksmtp
+        - kmailtransport
+        - kidentitymanagement
+        - kcalutils
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libkf5calendarcore-dev
+        - libkf5prison-dev
+        - libqgpgme-dev
+        stage-packages:
+        - libgpgmepp6
+        - libkf5calendarcore5
+        - libkf5prison5
+        - libqgpgme15
+        source: https://invent.kde.org/pim/akonadi-contacts.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+        stage:
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5AkonadiCore.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5AkonadiPrivate.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5AkonadiWidgets.so.5"
+        - "-usr/share/locale/ca@valencia/LC_MESSAGES/libakonadi5.mo"
+        - "-usr/share/locale/cs/LC_MESSAGES/libakonadi5.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libakonadi5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5Mime.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libkmime5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5AkonadiMime.so.5"
+        - "-usr/share/locale/ca@valencia/LC_MESSAGES/libakonadi-kmime5.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libakonadi-kmime5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5AkonadiSearchPIM.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5GrantleeTheme.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libgrantleetheme.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5SMTP.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libksmtp5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5GAPICore.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5MailTransport.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libmailtransport5.mo"
+        - "-usr/share/locale/gl/LC_MESSAGES/libmailtransport5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5TextEdit.so.5"
+        - "-usr/share/locale/ca@valencia/LC_MESSAGES/libkpimtextedit.mo"
+        - "-usr/share/locale/cs/LC_MESSAGES/libkpimtextedit.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libkpimtextedit.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5IdentityManagement.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5IdentityManagementWidgets.so.5"
+        - "-usr/share/locale/cs/LC_MESSAGES/libkpimidentities5.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libkpimidentities5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5IMAP.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libkimap5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5IdentityManagementWidgets.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5Ldap.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libkldap5.mo"
+        - "-usr/share/locale/fi/LC_MESSAGES/libkpimidentities5.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5Libkdepim.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libkdepim.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5PimCommon.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5PimCommonAkonadi.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5Gravatar.so.5"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libgravatar.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5Libkleo.so.5"
+        - "-usr/share/locale/ca@valencia/LC_MESSAGES/libkleopatra.mo"
+        - "-usr/share/locale/fr/LC_MESSAGES/libkleopatra.mo"
+        - "-usr/share/locale/gl/LC_MESSAGES/libkleopatra.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libkleopatra.mo"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5Mbox.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5MessageComposer.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5MessageCore.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5MessageViewer.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5MimeTreeParser.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5TemplateParser.so.5"
+        - "-usr/lib/$CRAFT_ARCH_TRIPLET/libKPim5WebEngineViewer.so.5"
+        - "-usr/share/locale/ca@valencia/LC_MESSAGES/libmessagelist.mo"
+        - "-usr/share/locale/ca@valencia/LC_MESSAGES/libmessageviewer.mo"
+        - "-usr/share/locale/fr/LC_MESSAGES/libmessagecomposer.mo"
+        - "-usr/share/locale/gl/LC_MESSAGES/libmessagecomposer.mo"
+        - "-usr/share/locale/gl/LC_MESSAGES/libmessageviewer.mo"
+        - "-usr/share/locale/nl/LC_MESSAGES/libmessagecomposer.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libmessagecomposer.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libmessagecore.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libmessagelist.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libmessageviewer.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libmimetreeparser.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libtemplateparser.mo"
+        - "-usr/share/locale/zh_CN/LC_MESSAGES/libwebengineviewer.mo"
+    akonadi-notes:
+        after:
+        - akonadi
+        - akonadi-mime
+        - akonadi-contact
+        - akonadi-search
+        - ksmtp
+        - kmailtransport
+        - kidentitymanagement
+        - kcalutils
+        - messagelib
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/akonadi-notes.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    calendarsupport:
+        after:
+        - akonadi
+        - akonadi-mime
+        - akonadi-calendar
+        - akonadi-notes
+        - kmime
+        - ksmtp
+        - libkgapi
+        - kmailtransport
+        - kpimtextedit
+        - kidentitymanagement
+        - kcalutils
+        - akonadi-contact
+        - gravatar
+        - libkleo
+        - kmbox
+        plugin: cmake
+        build-packages:
+        - cmake
+        source: https://invent.kde.org/pim/calendarsupport.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    akonadi-calendar:
+        after:
+        - akonadi
+        - akonadi-mime
+        - akonadi-contact
+        - akonadi-search
+        - ksmtp
+        - kmailtransport
+        - kidentitymanagement
+        - kcalutils
+        - messagelib
+        plugin: cmake
+        build-packages:
+        - cmake
+        - libkf5calendarcore-dev
+        - libqgpgme-dev
+        stage-packages:
+        - libgpgmepp6
+        - libkf5calendarcore5
+        - libqgpgme15
+        source: https://invent.kde.org/pim/akonadi-calendar.git
+        source-branch: release/23.08
+        cmake-parameters:
+        - -DCMAKE_INSTALL_PREFIX=/usr
+        - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+        - -DQT_MAJOR_VERSION=5
+        - -DBUILD_WITH_QT6=OFF
+        - -DBUILD_TESTING=OFF
+        - -DBUILD_KWALLETD=OFF
+        - -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        - -DCMAKE_INSTALL_LOCALSTATEDIR=/var
+        - -DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_FIND_USE_PACKAGE_REGISTRY=OFF
+        - -DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON
+        - -DCMAKE_INSTALL_RUNSTATEDIR=/run
+        - -DCMAKE_SKIP_INSTALL_ALL_DEPENDENCY=ON
+        - -DCMAKE_VERBOSE_MAKEFILE=ON
+        - -DCMAKE_INSTALL_LIBDIR=lib/$CRAFT_ARCH_TRIPLET
+        - --log-level=STATUS
+        - -DCMAKE_LIBRARY_PATH=lib/$CRAFT_ARCH_TRIPLET
+        - "-DCMAKE_FIND_ROOT_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr\\;/snap/ffmpeg-2204-sdk/current"
+        - "-DCMAKE_PREFIX_PATH=$CRAFT_STAGE\\;/snap/kf5-5-113-qt-5-15-11-core22-sdk/current\\;/usr"
+        build-environment:
+        - PATH: /snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/bin${PATH:+:$PATH}
+        - XDG_DATA_DIRS: $CRAFT_STAGE/usr/share:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/share:/usr/share${XDG_DATA_DIRS:+:$XDG_DATA_DIRS}
+        - XDG_CONFIG_HOME: $CRAFT_STAGE/etc/xdg:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/etc/xdg:/etc/xdg${XDG_CONFIG_HOME:+:$XDG_CONFIG_HOME}
+        - LD_LIBRARY_PATH: "/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib/${CRAFT_ARCH_TRIPLET}:/snap/kf5-5-113-qt-5-15-11-core22-sdk/current/usr/lib:$CRAFT_STAGE/usr/lib:$CRAFT_STAGE/lib/:$CRAFT_STAGE/usr/lib/${CRAFT_ARCH_TRIPLET}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
