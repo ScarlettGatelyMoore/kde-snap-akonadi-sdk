@@ -51,6 +51,8 @@ parts:
         - qtbase5-private-dev
         - shared-mime-info
         - xsltproc
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libaccounts-qt5-1
         - libkaccounts2
@@ -60,6 +62,7 @@ parts:
         - libaccounts-qt5-1
         - libxml2
         - liblzma5
+        stage-snaps:
         source: https://invent.kde.org/pim/akonadi.git
         source-branch: release/23.08
         cmake-parameters:
@@ -95,6 +98,8 @@ parts:
         - cmake
         - extra-cmake-modules
         - libboost-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/kmime.git
         source-branch: release/23.08
         cmake-parameters:
@@ -133,6 +138,8 @@ parts:
         - pkg-config
         - shared-mime-info
         - xsltproc
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/akonadi-mime.git
         source-branch: release/23.08
         cmake-parameters:
@@ -171,6 +178,8 @@ parts:
         - libkf5calendarcore-dev
         - libkf5contacts-dev
         - libxapian-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libxapian30
         - libkf5calendarcore5
@@ -209,6 +218,8 @@ parts:
         - cmake
         - libboost-dev
         - libgrantlee5-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libgrantlee-templates5
         - libgrantlee-textdocument5
@@ -246,6 +257,8 @@ parts:
         build-packages:
         - cmake
         - libsasl2-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/ksmtp.git
         source-branch: release/23.08
         cmake-parameters:
@@ -285,6 +298,8 @@ parts:
         - libkf5calendarcore-dev
         - libsasl2-dev
         - libxml2-utils
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/libkgapi.git
         source-branch: release/23.08
         cmake-parameters:
@@ -325,6 +340,8 @@ parts:
         - libsasl2-dev
         - pkg-config
         - qt5keychain-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libqt5keychain1
         source: https://invent.kde.org/pim/kmailtransport.git
@@ -365,6 +382,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/kpimtextedit.git
         source-branch: release/23.08
         cmake-parameters:
@@ -404,6 +423,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/kidentitymanagement.git
         source-branch: release/23.08
         cmake-parameters:
@@ -444,6 +465,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/kcalutils.git
         source-branch: release/23.08
         cmake-parameters:
@@ -486,6 +509,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/kimap.git
         source-branch: release/23.08
         cmake-parameters:
@@ -529,6 +554,8 @@ parts:
         build-packages:
         - cmake
         - libkf5doctools-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/kldap.git
         source-branch: release/23.08
         cmake-parameters:
@@ -573,6 +600,8 @@ parts:
         build-packages:
         - cmake
         - libkf5doctools-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/libkdepim.git
         source-branch: release/23.08
         cmake-parameters:
@@ -618,6 +647,8 @@ parts:
         build-packages:
         - cmake
         - libkf5doctools-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/libraries/ktextaddons.git
         source-branch: '1.5'
         cmake-parameters:
@@ -664,6 +695,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/pimcommon.git
         source-branch: release/23.08
         cmake-parameters:
@@ -706,6 +739,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/libgravatar.git
         source-branch: release/23.08
         cmake-parameters:
@@ -753,6 +788,8 @@ parts:
         - libgpgmepp-dev
         - libgpgme-dev
         - libqgpgme-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libgpgmepp6
         - libgpgme11
@@ -803,6 +840,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/kmbox.git
         source-branch: release/23.08
         cmake-parameters:
@@ -849,6 +888,8 @@ parts:
         build-packages:
         - cmake
         - libqca-qt5-2-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libqca-qt5-2
         - libqca-qt5-2-plugins
@@ -895,6 +936,8 @@ parts:
         - libkf5calendarcore-dev
         - libkf5prison-dev
         - libqgpgme-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libgpgmepp6
         - libkf5calendarcore5
@@ -1007,6 +1050,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/akonadi-notes.git
         source-branch: release/23.08
         cmake-parameters:
@@ -1054,6 +1099,8 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/calendarsupport.git
         source-branch: release/23.08
         cmake-parameters:
@@ -1097,6 +1144,8 @@ parts:
         - cmake
         - libkf5calendarcore-dev
         - libqgpgme-dev
+        build-snaps:
+        - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
         - libgpgmepp6
         - libkf5calendarcore5
