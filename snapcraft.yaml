@@ -220,6 +220,7 @@ parts:
         build-snaps:
         - kf5-5-113-qt-5-15-11-core22-sdk
         stage-packages:
+        - libgrantlee5-dev
         - libgrantlee-templates5
         - libgrantlee-textdocument5
         source: https://invent.kde.org/pim/grantleetheme.git
