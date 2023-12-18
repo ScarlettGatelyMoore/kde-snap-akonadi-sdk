@@ -887,6 +887,7 @@ parts:
         plugin: cmake
         build-packages:
         - cmake
+        - libqca-qt5-2-dev
         build-snaps:
         - kf5-5-113-qt-5-15-11-core22-sdk
         source: https://invent.kde.org/pim/messagelib.git
